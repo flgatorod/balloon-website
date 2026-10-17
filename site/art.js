@@ -77,6 +77,13 @@ export function balloonArt(kind, colors, { seed = 7, fabric = '#ffffff', bg = 't
     body += `<rect x="150" y="248" width="100" height="16" rx="6" fill="rgba(43,24,56,.16)"/>`;
     const pts = sample(9, (t) => [140 + t * 120, 215 - Math.sin(t * Math.PI) * 55]);
     body += along(pts, cs, rand, { minR: 12, maxR: 24 });
+  } else if (kind === 'kit') {
+    const pts = sample(12, (t) => [95 + t * 210, 150 - Math.sin(t * Math.PI) * 70]);
+    body += along(pts, cs, rand, { minR: 12, maxR: 26 });
+    body += `<path d="M95 160 L305 160 L290 282 L110 282 Z" fill="#D9B98C" stroke="rgba(43,24,56,.2)"/>`;
+    body += `<path d="M95 160 L60 128 L150 128 L170 160 Z M305 160 L340 128 L250 128 L230 160 Z" fill="#C9A673" stroke="rgba(43,24,56,.2)"/>`;
+    body += `<rect x="150" y="196" width="100" height="40" rx="8" fill="#fff" opacity=".9"/>`;
+    body += `<text x="200" y="222" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="16" fill="#2B1838">DIY kit</text>`;
   } else if (kind === 'backdrop') {
     body += `<rect x="70" y="276" width="260" height="8" rx="4" fill="rgba(43,24,56,.14)"/>`;
     body += `<circle cx="200" cy="150" r="125" fill="${fabric}" stroke="rgba(43,24,56,.12)"/>`;

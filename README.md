@@ -39,3 +39,16 @@ New orders show in the Stripe dashboard/app with event date, time window, addres
 - Confirm with the CPA: sales tax treatment for decor + installation (currently 6% on items, delivery untaxed), and that Northern VA's 6% applies to all deliveries.
 - Confirm prices against her material costs and time.
 - Replace illustrations with her photos.
+
+## Themes and licensed characters
+
+Theme names on the site describe a look ("Trainer battle", "Dino roar"), never a brand or character,
+and the site never shows character art. Two safe ways to offer character parties:
+
+1. **Color-matched themes** (what's built): a theme sets the balloon colors; no names, logos or characters.
+2. **Genuine licensed foil balloons as an add-on**: buy officially licensed foils (e.g. Anagram's licensed lines)
+   from a distributor or retailer, keep the receipts, and put them in the kit. Reselling genuine items is generally fine;
+   making or printing your own character toppers, cutouts or banners is not, without a license.
+   Don't put character names or logos in product titles or photos.
+
+To add a theme, add a line to `THEMES` in `site/pricing.js` with up to 4 color ids.

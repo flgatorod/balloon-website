@@ -25,7 +25,7 @@ test('too many colors is rejected', () => {
 });
 
 test('every product prices cleanly with defaults', () => {
-  for (const id of ['balloon-bouquet', 'grab-and-go-garland', 'balloon-columns', 'table-centerpiece',
+  for (const id of ['balloon-bouquet', 'grab-and-go-garland', 'balloon-columns', 'table-centerpiece', 'diy-garland-kit', 'themed-party-kit',
     'organic-garland-install', 'signature-backdrop', 'entry-arch', 'full-party-setup']) {
     const p = getProduct(id);
     const r = priceItem(p, defaultSelections(p));
@@ -68,4 +68,15 @@ test('tampered quantity is rejected', () => {
   const o = priceOrder({ items: [{ productId: p.id, selections: defaultSelections(p), qty: 0 }],
     fulfillment: { method: 'delivery', zip: '20155', eventDate: addDays(today, 10) } }, { zipMiles: ZIP_MILES, today });
   assert.ok(o.errors.some((e) => e.includes('quantity')));
+});
+
+test('themed kit: theme presets use real colors and fit the color limit', async () => {
+  const { THEMES, COLORS } = await import('../site/pricing.js');
+  for (const t of THEMES) {
+    assert.ok(t.colors.length <= 4, t.id);
+    t.colors.forEach((c) => assert.ok(COLORS.find((x) => x.id === c), `${t.id}:${c}`));
+  }
+  const p = getProduct('themed-party-kit');
+  const r = priceItem(p, { theme: 'dino', size: 'party', colors: THEMES[1].colors, name: 'Leo', addons: ['licensed'] });
+  assert.equal(r.unit, (119 + 10 + 18) * 100);
 });

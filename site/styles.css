@@ -98,6 +98,7 @@ main:focus { outline: none; }
 .card .from { font-weight: 600; }
 .tag { font-size: 13px; font-weight: 600; color: var(--lagoon); }
 .tag.install { color: var(--pop-deep); }
+.tag.kit { color: var(--plum-soft); }
 
 /* ---------- product page ---------- */
 .back { display: inline-block; margin: 10px 0 14px; font-weight: 600; text-decoration: none; color: var(--plum-soft); }

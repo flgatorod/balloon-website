@@ -52,14 +52,14 @@ function viewShop(filter = 'all') {
       <p>Pick a design, choose your colors, and see your price right away. Grab it from us in ${esc(CONFIG.pickupArea)} or we’ll deliver and set it up.</p>
     </section>
     <div class="filters" role="group" aria-label="Show">
-      ${[['all', 'Everything'], ['pickup', 'Ready for pickup'], ['install', 'We set it up']]
+      ${[['all', 'Everything'], ['pickup', 'Ready for pickup'], ['kit', 'DIY kits'], ['install', 'We set it up']]
         .map(([id, label]) => `<button class="chip" data-filter="${id}" aria-pressed="${filter === id}">${label}</button>`).join('')}
     </div>
     <div class="grid">
       ${items.map((p) => `
         <a class="card" href="#/p/${p.id}">
           <div class="card-media">${artFor(p, defaultSelections(p))}</div>
-          <span class="tag ${p.category}">${p.category === 'install' ? 'Delivered and set up' : 'Pickup or delivery'}</span>
+          <span class="tag ${p.category}">${p.category === 'install' ? 'Delivered and set up' : p.category === 'kit' ? 'DIY kit' : 'Pickup or delivery'}</span>
           <h3>${esc(p.name)}</h3>
           <span class="from">From ${formatMoney(startingPrice(p))}</span>
         </a>`).join('')}
@@ -71,11 +71,13 @@ function viewShop(filter = 'all') {
 function optionHtml(product, opt, sel) {
   if (opt.type === 'select') {
     const base = Math.min(...opt.choices.map((c) => c.price));
-    const isBase = product.options.indexOf(opt) === product.options.findIndex((o) => o.type === 'select');
+    const priced = (o) => o.type === 'select' && o.choices.some((c) => c.price > 0);
+    const isBase = product.options.indexOf(opt) === product.options.findIndex(priced);
+    const allFree = !opt.choices.some((c) => c.price > 0);
     return `<fieldset><legend>${esc(opt.label)}</legend><div class="pills">
       ${opt.choices.map((c) => `
         <label class="pill"><input type="radio" name="${opt.id}" value="${c.id}" ${sel[opt.id] === c.id ? 'checked' : ''}>
-          <span>${esc(c.label)}<small>${isBase ? formatMoney(c.price * 100) : c.price > base ? '+' + formatMoney((c.price - base) * 100) : 'Included'}</small></span></label>`).join('')}
+          <span>${esc(c.label)}${allFree ? '' : `<small>${isBase ? formatMoney(c.price * 100) : c.price > base ? '+' + formatMoney((c.price - base) * 100) : 'Included'}</small>`}</span></label>`).join('')}
     </div></fieldset>`;
   }
   if (opt.type === 'colors') {
@@ -112,7 +114,7 @@ function viewProduct(id, editIndex = null) {
       <form id="pform" novalidate>
         <h1>${esc(product.name)}</h1>
         <p class="blurb">${esc(product.blurb)}</p>
-        <p class="lead">${product.category === 'install' ? 'We deliver and set up' : 'Pickup, or add delivery at checkout'} · Book at least ${product.leadDays} days ahead</p>
+        <p class="lead">${product.category === 'install' ? 'We deliver and set up' : product.category === 'kit' ? 'You assemble it · Pickup, or add delivery at checkout' : 'Pickup, or add delivery at checkout'} · Book at least ${product.leadDays} days ahead</p>
         ${product.options.map((o) => optionHtml(product, o, sel)).join('')}
         <fieldset><legend>Quantity</legend>
           <div class="qty"><button type="button" data-q="-1" aria-label="One fewer">−</button><output id="qty">${qty}</output><button type="button" data-q="1" aria-label="One more">+</button></div>
@@ -154,7 +156,12 @@ function viewProduct(id, editIndex = null) {
   form.addEventListener('change', (e) => {
     const opt = product.options.find((o) => o.id === e.target.name);
     if (!opt) return;
-    if (opt.type === 'select') sel[opt.id] = e.target.value;
+    if (opt.type === 'select') {
+      sel[opt.id] = e.target.value;
+      const preset = opt.choices.find((c) => c.id === e.target.value)?.colors;
+      const colorOpt = product.options.find((o) => o.type === 'colors');
+      if (preset && colorOpt) sel[colorOpt.id] = preset.slice(0, colorOpt.max);
+    }
     if (opt.type === 'multi') sel[opt.id] = [...form.querySelectorAll(`input[name="${opt.id}"]:checked`)].map((i) => i.value);
     refresh();
   });

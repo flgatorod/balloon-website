@@ -41,6 +41,8 @@ export const COLORS = [
   { id: 'hotpink', name: 'Hot pink', hex: '#E0457B' },
   { id: 'coral', name: 'Coral', hex: '#F2735E' },
   { id: 'peach', name: 'Peach', hex: '#F7B58A' },
+  { id: 'red', name: 'Classic red', hex: '#D7263D' },
+  { id: 'orange', name: 'Orange', hex: '#F28C28' },
   { id: 'butter', name: 'Butter yellow', hex: '#FFD66B' },
   { id: 'sage', name: 'Sage', hex: '#A9BFA0' },
   { id: 'emerald', name: 'Emerald', hex: '#2F7D5B' },
@@ -54,11 +56,29 @@ export const COLORS = [
   { id: 'rosegold', name: 'Rose gold chrome', hex: '#D79C8C', chrome: true },
 ];
 
-// category: 'pickup' = she makes it, customer picks it up (delivery optional)
+// category: 'pickup'  = she makes it, customer picks it up (delivery optional)
+//           'kit'     = uninflated DIY kit the customer assembles (pickup or delivery)
 //           'install' = she delivers and sets it up (delivery required)
 // leadDays: how many days' notice she needs.
 // image: put a photo in site/images/ and set e.g. 'images/garland-pink.jpg'.
 //        Until then, the site draws an illustration in the chosen colors.
+
+// Theme presets for the themed kit. Picking a theme fills in its colors; the
+// customer can still change them. Names describe a look, never a brand or
+// character (see README: "Themes and licensed characters").
+export const THEMES = [
+  { id: 'trainer', label: 'Trainer battle', colors: ['red', 'white', 'black', 'butter'] },
+  { id: 'dino', label: 'Dino roar', colors: ['emerald', 'sage', 'orange', 'butter'] },
+  { id: 'mermaid', label: 'Mermaid lagoon', colors: ['lilac', 'babyblue', 'blush', 'silver'] },
+  { id: 'space', label: 'Outer space', colors: ['royal', 'black', 'silver', 'purple'] },
+  { id: 'princess', label: 'Pastel princess', colors: ['blush', 'lilac', 'white', 'gold'] },
+  { id: 'levelup', label: 'Level up gamer', colors: ['black', 'purple', 'hotpink', 'babyblue'] },
+  { id: 'safari', label: 'Wild safari', colors: ['sage', 'peach', 'ivory', 'gold'] },
+  { id: 'gameday', label: 'Game day', colors: ['royal', 'white', 'red', 'silver'] },
+];
+
+const KIT_INCLUDES = 'Includes mixed 5, 11 and 18-inch balloons, decorating strip, glue dots, wall hooks, a hand pump and a QR code to our how-to video.';
+
 export const CATALOG = [
   {
     id: 'balloon-bouquet',
@@ -144,6 +164,54 @@ export const CATALOG = [
         { id: 'large', label: 'Large (about 20 in)', price: 38 },
       ] },
       { id: 'colors', type: 'colors', label: 'Colors', min: 1, max: 3, included: 3, extraPrice: 0 },
+    ],
+  },
+  {
+    id: 'diy-garland-kit',
+    name: 'DIY garland kit',
+    category: 'kit',
+    art: 'kit',
+    leadDays: 3,
+    maxQty: 6,
+    blurb: 'Everything to build your own organic garland at home, in your colors. Balloons come uninflated and sorted by size. ' + KIT_INCLUDES,
+    defaultColors: ['blush', 'ivory', 'rosegold'],
+    options: [
+      { id: 'size', type: 'select', label: 'Garland length', choices: [
+        { id: 'small', label: '6–8 ft (about 75 balloons)', price: 65 },
+        { id: 'medium', label: '10–12 ft (about 120 balloons)', price: 95 },
+        { id: 'large', label: '16–18 ft (about 180 balloons)', price: 135 },
+      ] },
+      { id: 'colors', type: 'colors', label: 'Colors', min: 1, max: 5, included: 3, extraPrice: 8, hint: '3 colors included, $8 each after' },
+      { id: 'addons', type: 'multi', label: 'Extras', choices: [
+        { id: 'pump', label: 'Electric balloon pump (yours to keep)', price: 22 },
+        { id: 'chrome', label: 'Chrome accent pack', price: 12 },
+        { id: 'greenery', label: 'Faux greenery', price: 15 },
+      ] },
+    ],
+  },
+  {
+    id: 'themed-party-kit',
+    name: 'Themed party kit',
+    category: 'kit',
+    art: 'kit',
+    leadDays: 3,
+    maxQty: 4,
+    blurb: 'A DIY garland kit plus jumbo balloons and a happy birthday banner, color-matched to your party theme. ' + KIT_INCLUDES,
+    defaultColors: ['red', 'white', 'black', 'butter'],
+    options: [
+      { id: 'theme', type: 'select', label: 'Theme', choices: THEMES.map((t) => ({ id: t.id, label: t.label, price: 0, colors: t.colors })) },
+      { id: 'size', type: 'select', label: 'Kit size', choices: [
+        { id: 'mini', label: 'Mini: 6–8 ft garland + 2 jumbos', price: 79 },
+        { id: 'party', label: 'Party: 10–12 ft garland + 3 jumbos + banner', price: 119 },
+        { id: 'mega', label: 'Mega: 16–18 ft garland + 4 jumbos + banner + foil numbers', price: 169 },
+      ] },
+      { id: 'colors', type: 'colors', label: 'Colors', min: 1, max: 5, included: 4, extraPrice: 8, hint: 'Set by your theme, change any you like' },
+      { id: 'name', type: 'text', label: 'Name on the banner', placeholder: 'e.g. Leo', maxLength: 16, flatPrice: 10, hint: '$10' },
+      { id: 'addons', type: 'multi', label: 'Extras', choices: [
+        { id: 'licensed', label: 'Officially licensed character foil balloon (tell us which in your order notes)', price: 18 },
+        { id: 'pump', label: 'Electric balloon pump (yours to keep)', price: 22 },
+        { id: 'cups', label: 'Matching plates, cups and napkins for 12', price: 24 },
+      ] },
     ],
   },
   {
