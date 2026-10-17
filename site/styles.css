@@ -17,12 +17,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --mist: #1B1221; --card: #261A2E; --plum: #F5EEF9; --plum-soft: #C7B6D3;
-    --line: #3C2D47; --pop: #FF6B9E; --pop-deep: #FF8AB3; --lagoon: #4FC6C1;
+    --line: #3C2D47; --pop: #FF6B9E; --pop-deep: #FF8AB3; --lagoon: #4FC6C1; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --mist: #1B1221; --card: #261A2E; --plum: #F5EEF9; --plum-soft: #C7B6D3;
-  --line: #3C2D47; --pop: #FF6B9E; --pop-deep: #FF8AB3; --lagoon: #4FC6C1;
+  --line: #3C2D47; --pop: #FF6B9E; --pop-deep: #FF8AB3; --lagoon: #4FC6C1; color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
